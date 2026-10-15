@@ -125,7 +125,7 @@
           <button class="authors-close authors-hint" type="button">click to hide full author list <span class="authors-caret" aria-hidden="true"></span></button>
         </details>
         <p class="hero-lead">
-          The largest, openly licensed dataset of medical ultrasound channel capture data.
+          An open, large-scale, community-driven dataset of medical ultrasound raw channel data
         </p>
       </div>
       <div class="container">
@@ -230,15 +230,15 @@
             blood flow measurement and ultrasound inverse problems.
           </p>
           <p>
-            The initial release of the dataset contains <strong>19,336</strong> real and synthetic channel capture measurements, spanning a wide variety of acquisition types, targets and downstream tasks,
+            The initial (v1.0) release of the dataset contains <strong>19,336</strong> real and synthetic channel capture measurements, spanning a wide variety of acquisition types, targets and downstream tasks,
             including reconstruction, flow, quantitative imaging, motion estimation and interpretation tasks, contributed by <strong>38 institutions</strong> across academia and industry. Released under
             <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener"><strong>CC BY 4.0</strong></a>.
           </p>
           <p>
-            The OpenH-RF format is implemented using the <a href="https://zea.readthedocs.io/en/latest/getting-started.html" target="_blank" rel="noopener">zea</a>
-            ultrasound toolbox. Each HDF5 file holds the raw per-element channel data together with the full
-            transmit and receive geometry needed to beamform it, and, where available, derived images, maps,
-            labels and auxiliary signals.
+            The OpenH-RF format is implemented using the <a href="https://zea.readthedocs.io/en/stable/getting-started.html" target="_blank" rel="noopener">zea</a>
+            ultrasound toolbox. Each file holds the raw per-element channel data together with the full
+            transmit and receive geometry needed to beamform it. Where available, files also include derived
+            images, maps, labels and auxiliary signals that help interpret the data.
           </p>
         </div>
       </div>
@@ -318,13 +318,18 @@
             The dataset is on Hugging Face at
             <a href="https://huggingface.co/datasets/nvidia/OpenH-RF" target="_blank" rel="noopener">nvidia/OpenH-RF</a>.
             The files can be streamed using 
-            <a href="https://zea.readthedocs.io/en/latest/getting-started.html" target="_blank" rel="noopener">zea</a>.
+            <a href="https://zea.readthedocs.io/en/stable/getting-started.html" target="_blank" rel="noopener">zea</a>.
           </p>
           <p>
-            You can use the zea app to inspect and preview the data in each dataset. For GPU-enabled installation instructions,  <a href="https://zea.readthedocs.io/en/latest/installation.html" target="_blank" rel="noopener">see here</a>. For a minimal install:
+            You can use <code>zea app</code> to inspect and preview the data in each dataset. For GPU-enabled installation instructions,  <a href="https://zea.readthedocs.io/en/stable/installation.html" target="_blank" rel="noopener">see here</a>. For a minimal install:
           </p>
         </div>
         <div id="get-data"></div>
+        <p class="steps">
+          To get only the data you need, use the <a href="#explorer">dataset explorer</a>. Filter the datasets by
+          acquisition type, imaging target, included metadata keys and more, then click
+          <strong>Generate download script</strong> to get a script that fetches just the matching files.
+        </p>
       </div>
     </section>
 

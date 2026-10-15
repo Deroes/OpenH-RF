@@ -2,7 +2,7 @@
   <a href="https://open-h.github.io/OpenH-RF/"><img src="site/assets/img/logo/logo-glow-transparent.svg" alt="" height="56" align="absmiddle"></a> OpenH-RF
 </h1>
 
-<p align="center"><em>The largest, openly licensed dataset of medical ultrasound channel capture data.</em></p>
+<p align="center"><em>An open, large-scale, community-driven dataset of medical ultrasound raw channel data</em></p>
 
 <div align="center">
 
@@ -18,20 +18,67 @@
 
 OpenH-RF is a collaborative initiative led by [Stanford University](https://med.stanford.edu/ultrasound.html), [Eindhoven University of Technology (TU/e)](https://www.tue.nl/en/research/research-groups/signal-processing-systems/biomedical-diagnostics) and [NVIDIA](https://www.nvidia.com/) to build a large-scale, openly licensed dataset of pre-beamformed (channel capture) medical ultrasound measurements. *The goal:* train general-purpose foundation models capable of multi-task *raw-to-insight* inference across echocardiography, general, fetal and transcranial imaging, blood flow measurement and ultrasound inverse problems.
 
-We aim to curate **20,000+** real and synthetic channel capture measurements spanning reconstruction, flow, quantitative imaging, motion estimation and interpretation tasks — released under **CC BY 4.0**.
+The initial (v1.0) release of the dataset contains **19,336** real and synthetic channel capture measurements, spanning a wide variety of acquisition types, targets and downstream tasks, including reconstruction, flow, quantitative imaging, motion estimation and interpretation tasks, contributed by **38 institutions** across academia and industry. Released under [**CC BY 4.0**](https://creativecommons.org/licenses/by/4.0/).
+
+The OpenH-RF format is implemented using the [`zea`](https://zea.readthedocs.io/en/stable/getting-started.html) ultrasound toolbox. Each file holds the raw per-element channel data together with the full transmit and receive geometry needed to beamform it. Where available, files also include derived images, maps, labels and auxiliary signals that help interpret the data.
+
+> [!TIP]
+> Explore the dataset on our [catalog page](https://open-h.github.io/OpenH-RF/) and filter by imaging target, acquisition type, downstream task, or contributor.
 
 ## 📣 Updates
 
-- 📄 **October 2026** — [The OpenH-RF preprint is out on arXiv!](https://arxiv.org/abs/2610.13616)
-- 🤗 **October 2026** — [OpenH-RF v1.0 is publicly released on Hugging Face!](https://huggingface.co/datasets/nvidia/OpenH-RF)
-- 🚀 **September 2026** — [OpenH-RF v1.0 early-access pre-release is live on Hugging Face!](https://huggingface.co/datasets/nvidia/OpenH-RF)
+- 📄 **October 2026:** [The OpenH-RF preprint is out on arXiv!](https://arxiv.org/abs/2610.13616)
+- 🤗 **October 2026:** [OpenH-RF v1.0 is publicly released on Hugging Face!](https://huggingface.co/datasets/nvidia/OpenH-RF)
+- 🚀 **September 2026:** [OpenH-RF v1.0 early-access pre-release is live on Hugging Face!](https://huggingface.co/datasets/nvidia/OpenH-RF)
+
+## Get the Data
+
+The dataset is on Hugging Face at [nvidia/OpenH-RF](https://huggingface.co/datasets/nvidia/OpenH-RF). The files can be streamed using [`zea`](https://zea.readthedocs.io/en/stable/getting-started.html).
+
+You can use `zea app` to inspect and preview the data in each dataset. For GPU-enabled installation instructions, [see here](https://zea.readthedocs.io/en/stable/installation.html). For a minimal install:
+
+```bash
+pip install "zea[jax,app]"
+zea app
+```
+
+Taking the [`tue-carotid`](https://open-h.github.io/OpenH-RF/#dataset/tue-carotid) dataset as an example, paste `hf://nvidia/OpenH-RF/tue-carotid` as the dataset and `hf://nvidia/OpenH-RF/tue-carotid/pipeline.yaml` as the config, pick a file to see its contents, and press Run to beamform it. You can also stream the data directly in Python:
+
+```python
+import zea
+
+with zea.Dataset("hf://nvidia/OpenH-RF/tue-carotid") as dataset:
+    print(dataset.file_paths[:3])  # print the first 3 filenames
+
+    file = dataset[0]  # streamed (only the bytes you read are downloaded)
+    file.summary()  # print the contents of the file
+    raw = file.data.raw_data[0]  # data for the first frame
+```
+
+Alternatively, copy the whole `tue-carotid` subset to disk:
+
+```bash
+zea data copy hf://nvidia/OpenH-RF/tue-carotid ./OpenH-RF/tue-carotid --key all
+```
+
+To get only the data you need, use the [dataset explorer](https://open-h.github.io/OpenH-RF/#explorer) on the website. Filter the datasets by acquisition type, imaging target, included metadata keys and more, then click **Generate download script** to get a script that fetches just the matching files.
 
 ## How to Participate
 
-1. **Review the RFP** — Read the [Request for Proposals](assets/OpenH-RF%20Request%20for%20Proposals%20(RFP).pdf) for technical scope, eligibility and evaluation criteria.
-2. **Submit a Proposal** — Prepare a concise proposal (≤ 5 pages) describing your dataset, collection methodology and target tasks. Submit to [this Google Form](https://forms.gle/tqiqYSnnar1AekB19).
-3. **Contribute Data** — Once approved, prepare your dataset in the OpenH-RF format, implemented in [`zea`](https://github.com/tue-bmd/zea) as documented [here](https://zea.readthedocs.io/en/v0.1.0a3/data-acquisition.html), along with a datacard specifying the CC BY 4.0 license. Approved contributors are given a dedicated shared storage location (S3 or Google Drive) for delivery and a Discord channel for coordination.
-4. **Co-author the Release** — Approved contributions are included in the public dataset and foundation model release — contributors are named co-authors in related publications upon project completion.
+> [!NOTE]
+> Contributions to OpenH-RF v1.0 are now closed. We are planning a v2.0 release in the future. If you are interested, please [get in touch](#contact) and [join our Discord](https://discord.gg/gNTJeUsH2B) to stay updated.
+
+<details>
+<summary><b>OpenH-RF v1.0 participation instructions</b></summary>
+
+<br>
+
+1. **Review the RFP:** Read the [Request for Proposals](assets/OpenH-RF%20Request%20for%20Proposals%20(RFP).pdf) for technical scope, eligibility and evaluation criteria.
+2. **Submit a Proposal:** Prepare a concise proposal (≤ 5 pages) describing your dataset, collection methodology and target tasks. Submit to [this Google Form](https://forms.gle/tqiqYSnnar1AekB19).
+3. **Contribute Data:** Once approved, prepare your dataset in the OpenH-RF format, implemented in [`zea`](https://github.com/tue-bmd/zea) as documented [here](https://zea.readthedocs.io/en/stable/data-acquisition.html), along with a data card specifying the CC BY 4.0 license. Approved contributors are given a dedicated shared storage location (S3 or Google Drive) for delivery and a Discord channel for coordination.
+4. **Co-author the Release:** Approved contributions are included in the public dataset and foundation model release. Contributors are named co-authors in related publications upon project completion.
+
+</details>
 
 ## Key Dates
 
@@ -41,8 +88,9 @@ We aim to curate **20,000+** real and synthetic channel capture measurements spa
 | ~~Proposal submission deadline~~ | ~~June 10, 2026~~ |
 | ~~Data collection window~~ | ~~May – July 2026~~ |
 | ~~Dataset delivery deadline~~ | ~~July 12, 2026~~ |
-| Model training & validation | August – September 2026 |
-| Public release (dataset + foundation model) | October 4, 2026 |
+| ~~Dataset public release (v1.0)~~ | ~~October 4, 2026~~ |
+| Model training & validation | Q4 2026 |
+| Foundation model release | TBD |
 
 ## Steering Committee
 
@@ -54,7 +102,26 @@ We aim to curate **20,000+** real and synthetic channel capture measurements spa
 
 ## Dataset Format
 
-The OpenH-RF format is implemented using the [`zea`](https://github.com/tue-bmd/zea) ultrasound toolbox. See the `zea` documentation for the [data specification](https://zea.readthedocs.io/en/v0.1.0a3/data-acquisition.html). The [`examples/templates/`](examples/templates/) directories are starting points for a submission — each has a `convert.py` (data → openh-rf `.hdf5`), a `reconstruct.py` (raw channel data → B-mode), and a `pipeline.yaml`:
+OpenH-RF uses the file format of the [`zea`](https://github.com/tue-bmd/zea) ultrasound toolbox, described in its [data specification](https://zea.readthedocs.io/en/stable/data-acquisition.html). Every dataset on the [OpenH-RF Hugging Face page](https://huggingface.co/datasets/nvidia/OpenH-RF) follows the layout below, so any of them is a good example to copy.
+
+Each submission contains:
+
+| File | Contents |
+|------|----------|
+| `*.hdf5` | One `zea` file per acquisition, holding the raw channel data (required) and the full probe and scan geometry |
+| `reconstruct.py` | A runnable script that reconstructs a B-mode image from the raw channel data |
+| `pipeline.yaml` | The `zea` processing pipeline that `reconstruct.py` runs |
+| `README.md` | The data card, shown as the dataset page on Hugging Face |
+| `LICENSE` | CC BY 4.0 |
+
+If a submission bundles several sub-datasets with different acquisition types or geometries, give each sub-dataset folder its own `reconstruct.py` and `pipeline.yaml`. A single pair at the root is fine when the processing is the same for all of them.
+
+<details>
+<summary><b>Templates and examples</b></summary>
+
+<br>
+
+The [`examples/templates/`](examples/templates/) directories are starting points for a submission. Each has a `convert.py` (source data to OpenH-RF `.hdf5`), a `reconstruct.py` and a `pipeline.yaml`.
 
 | Example | Modality |
 |---------|----------|
@@ -68,7 +135,7 @@ The OpenH-RF format is implemented using the [`zea`](https://github.com/tue-bmd/
 | [`examples/reconstruct_example.py`](examples/reconstruct_example.py) | Reconstructing a B-mode image from raw RF channel data using the default `zea` pipeline |
 | [`examples/save_pipeline_example.py`](examples/save_pipeline_example.py) | Saving a `zea` processing pipeline as a reusable YAML config |
 
-For a submission usually one `pipeline.yaml` + `reconstruct.py` pair suffices. If your submission bundles multiple sub-datasets (distinct acquisition types or geometries) as separate folders under one submission root, please give each sub-dataset folder its own `pipeline.yaml` + `reconstruct.py` rather than sharing one pair at the root instead of growing branching logic to auto-detect which sub-dataset it's running on. A shared root-level pair is still perfectly fine when the pipeline is identical across all sub-datasets.
+</details>
 
 ## Setup
 
@@ -84,7 +151,7 @@ uv run python examples/save_pipeline_example.py
 
 `uv sync` creates `.venv/` and installs dependencies listed in `pyproject.toml`. Run any script with `uv run python <script>.py`, or activate the venv with `source .venv/bin/activate`.
 
-`zea` is pinned in `uv.lock` to a specific commit of the moving [`openh-rf-latest`](https://github.com/tue-bmd/zea/tree/openh-rf-latest) tag, so every clone builds against the same spec. When the spec advances and you want the newer `zea`, bump the pin with `uv lock --upgrade-package zea` and commit the updated `uv.lock`.
+This repo pins `zea` v0.1.8. For more detailed installation instructions, see the [`zea` installation docs](https://zea.readthedocs.io/en/stable/installation.html).
 
 Pick a backend / accelerator with extras:
 
@@ -99,7 +166,7 @@ Pick a backend / accelerator with extras:
 Set the matching `KERAS_BACKEND` (`jax`, `torch`, or `tensorflow`) before running examples.
 
 > [!NOTE]
-> On Windows, use WSL2.
+> On Windows, use WSL2. See [details](https://zea.readthedocs.io/en/stable/installation.html#windows-users).
 
 ## Citation
 
@@ -151,12 +218,34 @@ If you use OpenH-RF in your research, please cite the [OpenH-RF paper](https://a
 }
 ```
 
+If you use [`zea`](https://github.com/tue-bmd/zea) to access or process the data, please also cite the [`zea` paper](https://doi.org/10.21105/joss.09881):
+
+```bibtex
+@article{stevens2026zea,
+  title = {{zea}: A Toolbox for Cognitive Ultrasound Imaging},
+  author = {Stevens, Tristan S. W. and van Nierop, Wessel L. and Luijten, Ben and
+            van de Schaft, Vincent and Nolan, Ois{\'i}n and Federici, Beatrice and
+            van Harten, Louis D. and Penninga, Simon W. and Schueler, Noortje I. P. and
+            van Sloun, Ruud J. G.},
+  journal = {Journal of Open Source Software},
+  publisher = {The Open Journal},
+  year = {2026},
+  volume = {11},
+  number = {121},
+  pages = {9881},
+  doi = {10.21105/joss.09881},
+  url = {https://doi.org/10.21105/joss.09881}
+}
+```
+
+If you use a specific sub-dataset, please also check whether it has its own citation. Open the [dataset explorer](https://open-h.github.io/OpenH-RF/#explorer), click the dataset's card and see its Citation section.
+
 ## Contact
 
-- **Technical questions** — [openh.data+rf@gmail.com](mailto:openh.data+rf@gmail.com), the [Hugging Face dataset community page](https://huggingface.co/datasets/nvidia/OpenH-RF/discussions), or the [`zea` community page](https://github.com/tue-bmd/zea/discussions)
-- **Administrative questions** — [wsimson@nvidia.com](mailto:wsimson@nvidia.com)
-- **Community** — [Join our Discord](https://discord.gg/gNTJeUsH2B)
+- **Technical questions:** [openh.data+rf@gmail.com](mailto:openh.data+rf@gmail.com), the [Hugging Face dataset community page](https://huggingface.co/datasets/nvidia/OpenH-RF/discussions), or the [`zea` community page](https://github.com/tue-bmd/zea/discussions)
+- **Administrative questions:** [wsimson@nvidia.com](mailto:wsimson@nvidia.com)
+- **Community:** [Join our Discord](https://discord.gg/gNTJeUsH2B)
 
 ## License
 
-Code in this repository is licensed under the [Apache License 2.0](LICENSE). The released dataset (when published) will be licensed under CC BY 4.0.
+Code in this repository is licensed under the [Apache License 2.0](LICENSE). The OpenH-RF v1.0 dataset is licensed under [CC BY 4.0](https://huggingface.co/datasets/nvidia/OpenH-RF/blob/v1.0/LICENSE).
